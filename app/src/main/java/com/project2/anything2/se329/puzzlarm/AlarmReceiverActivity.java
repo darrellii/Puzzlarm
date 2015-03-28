@@ -14,7 +14,9 @@ public class AlarmReceiverActivity extends ActionBarActivity {
         setContentView(R.layout.activity_receiver);
 
 
-
+        AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+        alertDialog.setTitle("WAKE UP");
+        alertDialog.setMessage("What's the capital of New York?");
 
 
     }
