@@ -1,5 +1,6 @@
 package com.project2.anything2.se329.puzzlarm;
 
+import android.app.AlertDialog;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
