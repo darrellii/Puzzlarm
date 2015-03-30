@@ -17,14 +17,14 @@ public class AlarmModel {
     public static final short FRIDAY = 5;
     public static final short SATURDAY = 6;
 
-    private long id;
-    private int hour;
-    private int min;
-    private boolean days[];
-    private boolean isRepeatedWeekly;
-    private Uri tone;
-    private String name;
-    private boolean isEnabled;
+    public long id;
+    public int hour;
+    public int min;
+    public boolean days[];
+    public boolean isRepeatedWeekly;
+    public Uri tone;
+    public String name;
+    public boolean isEnabled;
 
     public AlarmModel() {
         days = new boolean[7];
