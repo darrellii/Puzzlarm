@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.project2.anything2.se329.puzzlarm.R;
+import com.project2.anything2.se329.puzzlarm.alarmmanagement.AlarmModel;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -30,6 +31,8 @@ public class SetAlarmActivity extends MainActivity implements View.OnClickListen
     private Button saturday;
     private Button submit;
     private ArrayList<Integer> days;
+    private AlarmModel alarmDetails;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +60,8 @@ public class SetAlarmActivity extends MainActivity implements View.OnClickListen
         friday.setOnClickListener(this);
         saturday.setOnClickListener(this);
         submit.setOnClickListener(this);
+
+        alarmDetails = new AlarmModel();
     }
 
 
@@ -87,15 +92,16 @@ public class SetAlarmActivity extends MainActivity implements View.OnClickListen
         switch(v.getId()){
             case R.id.submitAlarm:
                 //submit
-                String time = setTime.getText().toString();
-                //assum time in format HH:MM
-                int hh = Integer.parseInt(time.split(":")[0]);
-                int mm = Integer.parseInt(time.split(":")[1]);
-                Intent i = new Intent(AlarmClock.ACTION_SET_ALARM);
-                i.putExtra(AlarmClock.EXTRA_HOUR, hh);
-                i.putExtra(AlarmClock.EXTRA_MINUTES, mm);
-                i.putExtra(AlarmClock.EXTRA_DAYS, days);
-                startActivity(i);
+              //  String time = setTime.getText().toString();
+                updateModelFromLayout();
+                //assume time in format HH:MM
+               // int hh = Integer.parseInt(time.split(":")[0]);
+               // int mm = Integer.parseInt(time.split(":")[1]);
+               // Intent i = new Intent(AlarmClock.ACTION_SET_ALARM);
+               // i.putExtra(AlarmClock.EXTRA_HOUR, hh);
+               // i.putExtra(AlarmClock.EXTRA_MINUTES, mm);
+               // i.putExtra(AlarmClock.EXTRA_DAYS, days);
+                //startActivity(i);
 
                 setTime.setText("");
                 sunday.setBackgroundColor(Color.GRAY);
@@ -106,6 +112,7 @@ public class SetAlarmActivity extends MainActivity implements View.OnClickListen
                 friday.setBackgroundColor(Color.GRAY);
                 saturday.setBackgroundColor(Color.GRAY);
                 days.removeAll(days);
+                finish();
 
                 break;
             case R.id.sun_button:
@@ -173,4 +180,32 @@ public class SetAlarmActivity extends MainActivity implements View.OnClickListen
                 break;
         }
     }
+   private void updateModelFromLayout(){
+       String time = setTime.getText().toString();
+       int hh = Integer.parseInt(time.split(":")[0]);
+       int mm = Integer.parseInt(time.split(":")[1]);
+       alarmDetails.setHour(hh);
+       alarmDetails.setMin(mm);
+       if(days.contains(Calendar.MONDAY)){
+           alarmDetails.setRepeatingDay(AlarmModel.MONDAY, true);
+       }
+       if(days.contains(Calendar.TUESDAY)){
+           alarmDetails.setRepeatingDay(AlarmModel.TUESDAY, true);
+       }
+       if(days.contains(Calendar.WEDNESDAY)){
+           alarmDetails.setRepeatingDay(AlarmModel.WEDNESDAY, true);
+       }
+       if(days.contains(Calendar.THURSDAY)){
+           alarmDetails.setRepeatingDay(AlarmModel.THURSDAY, true);
+       }
+       if(days.contains(Calendar.FRIDAY)){
+           alarmDetails.setRepeatingDay(AlarmModel.FRIDAY, true);
+       }
+       if(days.contains(Calendar.SATURDAY)){
+           alarmDetails.setRepeatingDay(AlarmModel.SATURDAY, true);
+       }
+       if(days.contains(Calendar.SUNDAY)){
+           alarmDetails.setRepeatingDay(AlarmModel.SUNDAY, true);
+       }
+   }
 }

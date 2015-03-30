@@ -14,7 +14,7 @@ public class AlarmModel {
     public static final short TUESDAY = 2;
     public static final short WEDNESDAY = 3;
     public static final short THURSDAY = 4;
-    public static final short FRDIAY = 5;
+    public static final short FRIDAY = 5;
     public static final short SATURDAY = 6;
 
     private long id;
