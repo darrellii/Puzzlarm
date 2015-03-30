@@ -13,7 +13,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.project2.anything2.se329.puzzlarm.R;
+import com.project2.anything2.se329.puzzlarm.alarmmanagement.AlarmClockManagerHelper;
 import com.project2.anything2.se329.puzzlarm.alarmmanagement.AlarmModel;
+import com.project2.anything2.se329.puzzlarm.localdata.AlarmLocalDataHelper;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -31,7 +33,7 @@ public class SetAlarmActivity extends MainActivity implements View.OnClickListen
     private Button saturday;
     private Button submit;
     private ArrayList<Integer> days;
-    private AlarmModel alarmDetails;
+    private AlarmModel alarmInfo;
 
 
     @Override
@@ -61,7 +63,7 @@ public class SetAlarmActivity extends MainActivity implements View.OnClickListen
         saturday.setOnClickListener(this);
         submit.setOnClickListener(this);
 
-        alarmDetails = new AlarmModel();
+        alarmInfo = new AlarmModel();
     }
 
 
@@ -94,6 +96,14 @@ public class SetAlarmActivity extends MainActivity implements View.OnClickListen
                 //submit
               //  String time = setTime.getText().toString();
                 updateModelFromLayout();
+                AlarmClockManagerHelper.cancelAlarms(this);
+                AlarmLocalDataHelper helper = new AlarmLocalDataHelper(this);
+                if(alarmInfo.id < 0){
+                    helper.createAlarm(alarmInfo);
+                }
+                else{
+                    helper.updateAlarm(alarmInfo);
+                }
                 //assume time in format HH:MM
                // int hh = Integer.parseInt(time.split(":")[0]);
                // int mm = Integer.parseInt(time.split(":")[1]);
@@ -184,28 +194,28 @@ public class SetAlarmActivity extends MainActivity implements View.OnClickListen
        String time = setTime.getText().toString();
        int hh = Integer.parseInt(time.split(":")[0]);
        int mm = Integer.parseInt(time.split(":")[1]);
-       alarmDetails.setHour(hh);
-       alarmDetails.setMin(mm);
+       alarmInfo.setHour(hh);
+       alarmInfo.setMin(mm);
        if(days.contains(Calendar.MONDAY)){
-           alarmDetails.setRepeatingDay(AlarmModel.MONDAY, true);
+           alarmInfo.setRepeatingDay(AlarmModel.MONDAY, true);
        }
        if(days.contains(Calendar.TUESDAY)){
-           alarmDetails.setRepeatingDay(AlarmModel.TUESDAY, true);
+           alarmInfo.setRepeatingDay(AlarmModel.TUESDAY, true);
        }
        if(days.contains(Calendar.WEDNESDAY)){
-           alarmDetails.setRepeatingDay(AlarmModel.WEDNESDAY, true);
+           alarmInfo.setRepeatingDay(AlarmModel.WEDNESDAY, true);
        }
        if(days.contains(Calendar.THURSDAY)){
-           alarmDetails.setRepeatingDay(AlarmModel.THURSDAY, true);
+           alarmInfo.setRepeatingDay(AlarmModel.THURSDAY, true);
        }
        if(days.contains(Calendar.FRIDAY)){
-           alarmDetails.setRepeatingDay(AlarmModel.FRIDAY, true);
+           alarmInfo.setRepeatingDay(AlarmModel.FRIDAY, true);
        }
        if(days.contains(Calendar.SATURDAY)){
-           alarmDetails.setRepeatingDay(AlarmModel.SATURDAY, true);
+           alarmInfo.setRepeatingDay(AlarmModel.SATURDAY, true);
        }
        if(days.contains(Calendar.SUNDAY)){
-           alarmDetails.setRepeatingDay(AlarmModel.SUNDAY, true);
+           alarmInfo.setRepeatingDay(AlarmModel.SUNDAY, true);
        }
    }
 }
