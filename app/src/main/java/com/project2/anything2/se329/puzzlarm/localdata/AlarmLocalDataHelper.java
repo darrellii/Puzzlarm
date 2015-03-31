@@ -13,8 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Emory on 3/30/2015. Most of the below code is heavily influenced by Steven Trigg and his guide on creating
- * android local databases at http://www.steventrigg.com/
+ * Created by Emory on 3/30/2015.
  */
 public class AlarmLocalDataHelper extends SQLiteOpenHelper {
 

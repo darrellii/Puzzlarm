@@ -96,7 +96,9 @@ public class SetAlarmActivity extends MainActivity implements View.OnClickListen
                 //submit
               //  String time = setTime.getText().toString();
                 updateModelFromLayout();
+
                 AlarmClockManagerHelper.cancelAlarms(this);
+
                 AlarmLocalDataHelper helper = new AlarmLocalDataHelper(this);
                 if(alarmInfo.id < 0){
                     helper.createAlarm(alarmInfo);
@@ -104,6 +106,9 @@ public class SetAlarmActivity extends MainActivity implements View.OnClickListen
                 else{
                     helper.updateAlarm(alarmInfo);
                 }
+
+                AlarmClockManagerHelper.setAlarms(this);
+                setResult(RESULT_OK);
                 //assume time in format HH:MM
                // int hh = Integer.parseInt(time.split(":")[0]);
                // int mm = Integer.parseInt(time.split(":")[1]);
@@ -123,7 +128,6 @@ public class SetAlarmActivity extends MainActivity implements View.OnClickListen
                 saturday.setBackgroundColor(Color.GRAY);
                 days.removeAll(days);
                 finish();
-
                 break;
             case R.id.sun_button:
                 if(days.contains(Calendar.SUNDAY)){

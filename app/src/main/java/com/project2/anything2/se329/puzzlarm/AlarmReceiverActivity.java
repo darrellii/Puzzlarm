@@ -1,19 +1,79 @@
 package com.project2.anything2.se329.puzzlarm;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.Handler;
+import android.os.PowerManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.Button;
+
+import com.project2.anything2.se329.puzzlarm.alarmmanagement.AlarmClockManagerHelper;
 
 
 public class AlarmReceiverActivity extends ActionBarActivity {
+    private MediaPlayer mPlay;
+    private PowerManager.WakeLock wake;
+
+    public static final int TIMEOUT = 60 * 1000; //(60 seconds)
+    public final String ID = this.getClass().getSimpleName();
+    String tone = getIntent().getStringExtra("TONE");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_receiver);
+
+        Button dismiss = (Button) findViewById(R.id.alarm_screen_button);
+        dismiss.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                mPlay.stop();
+                finish();
+            }
+        });
+
+        try {
+            if (tone != null && !tone.equals("")) {
+                Uri toneUri = Uri.parse(tone);
+                if (toneUri != null) {
+                    mPlay.setDataSource(this, toneUri);
+                    mPlay.setAudioStreamType(AudioManager.STREAM_ALARM);
+                    mPlay.setLooping(true);
+                    mPlay.prepare();
+                    mPlay.start();
+                }
+            }
+        }
+        catch(Exception e){
+
+        }
+
+        Runnable releaseWake = new Runnable(){
+                @Override
+                public void run() {
+                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+
+                    if (wake != null && wake.isHeld()) {
+                        wake.release();
+                    }
+                }
+            };
+
+            new Handler().postDelayed(releaseWake, TIMEOUT);
+
 
         final AlertDialog wrongAnswerDialog = new AlertDialog.Builder(this).create();
         wrongAnswerDialog.setTitle("Wrong Answer");
@@ -58,7 +118,34 @@ public class AlarmReceiverActivity extends ActionBarActivity {
         questionDialog.show();
 
     }
+    protected void onResume() {
+        super.onResume();
 
+        // Set the window to keep screen on
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+
+        // Acquire wakelock
+        PowerManager pm = (PowerManager) getApplicationContext().getSystemService(Context.POWER_SERVICE);
+        if (wake == null) {
+            wake = pm.newWakeLock((PowerManager.FULL_WAKE_LOCK | PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP), ID);
+        }
+
+        if (!wake.isHeld()) {
+            wake.acquire();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        if (wake != null && wake.isHeld()) {
+            wake.release();
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
