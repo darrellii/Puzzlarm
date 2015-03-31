@@ -17,7 +17,7 @@ public class AlarmModel {
     public static final short FRIDAY = 5;
     public static final short SATURDAY = 6;
 
-    public long id;
+    public long id = -1;
     public int hour;
     public int min;
     public boolean days[];

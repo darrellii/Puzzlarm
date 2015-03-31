@@ -37,7 +37,7 @@ public class SetAlarmActivity extends MainActivity implements View.OnClickListen
     private Button submit;
     private ArrayList<Integer> days;
     private AlarmModel alarmInfo;
-
+    private AlarmLocalDataHelper helper = new AlarmLocalDataHelper(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +66,17 @@ public class SetAlarmActivity extends MainActivity implements View.OnClickListen
         saturday.setOnClickListener(this);
         submit.setOnClickListener(this);
 
-        alarmInfo = new AlarmModel();
+        //android.util.Log.w("intent value", getIntent().getExtras().toString());
+        Long id = getIntent().getExtras().getLong("ID");
+        android.util.Log.w("id value", id.toString());
+
+        if (id == -1) {
+            alarmInfo = new AlarmModel();
+        }
+        else{
+            alarmInfo = helper.getAlarm(id);
+        }
+
     }
 
 
@@ -102,7 +112,6 @@ public class SetAlarmActivity extends MainActivity implements View.OnClickListen
 
                 AlarmClockManagerHelper.cancelAlarms(this);
 
-                AlarmLocalDataHelper helper = new AlarmLocalDataHelper(this);
                 if(alarmInfo.id < 0){
                     helper.createAlarm(alarmInfo);
                 }
@@ -207,7 +216,8 @@ public class SetAlarmActivity extends MainActivity implements View.OnClickListen
        alarmInfo.setHour(hh);
        alarmInfo.setMin(mm);
        alarmInfo.setTone(r);
-       
+       alarmInfo.setEnabled(true);
+
        if(days.contains(Calendar.MONDAY)){
            alarmInfo.setRepeatingDay(AlarmModel.MONDAY, true);
        }
