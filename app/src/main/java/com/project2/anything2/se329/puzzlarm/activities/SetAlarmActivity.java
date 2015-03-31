@@ -67,16 +67,7 @@ public class SetAlarmActivity extends MainActivity implements View.OnClickListen
         submit.setOnClickListener(this);
 
         //android.util.Log.w("intent value", getIntent().getExtras().toString());
-        Long id = getIntent().getExtras().getLong("ID");
-        android.util.Log.w("id value", id.toString());
-
-        if (id == -1) {
-            alarmInfo = new AlarmModel();
-        }
-        else{
-            alarmInfo = helper.getAlarm(id);
-        }
-
+        alarmInfo = new AlarmModel();
     }
 
 
