@@ -2,6 +2,9 @@ package com.project2.anything2.se329.puzzlarm.activities;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.provider.AlarmClock;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -198,8 +201,13 @@ public class SetAlarmActivity extends MainActivity implements View.OnClickListen
        String time = setTime.getText().toString();
        int hh = Integer.parseInt(time.split(":")[0]);
        int mm = Integer.parseInt(time.split(":")[1]);
+
+       Uri r = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+
        alarmInfo.setHour(hh);
        alarmInfo.setMin(mm);
+       alarmInfo.setTone(r);
+       
        if(days.contains(Calendar.MONDAY)){
            alarmInfo.setRepeatingDay(AlarmModel.MONDAY, true);
        }
