@@ -3,6 +3,7 @@ package com.project2.anything2.se329.puzzlarm;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -18,6 +19,8 @@ import android.view.WindowManager;
 import android.widget.Button;
 
 import com.project2.anything2.se329.puzzlarm.alarmmanagement.AlarmClockManagerHelper;
+
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
 
 public class AlarmReceiverActivity extends ActionBarActivity {

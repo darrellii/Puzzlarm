@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.provider.AlarmClock;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.project2.anything2.se329.puzzlarm.AlarmReceiverActivity;
 import com.project2.anything2.se329.puzzlarm.R;
 import com.project2.anything2.se329.puzzlarm.alarmmanagement.AlarmClockManagerHelper;
 import com.project2.anything2.se329.puzzlarm.alarmmanagement.AlarmModel;
@@ -100,18 +102,13 @@ public class SetAlarmActivity extends MainActivity implements View.OnClickListen
                 //submit
               //  String time = setTime.getText().toString();
                 updateModelFromLayout();
-
                 AlarmClockManagerHelper.cancelAlarms(this);
-
-                if(alarmInfo.id < 0){
-                    helper.createAlarm(alarmInfo);
-                }
-                else{
-                    helper.updateAlarm(alarmInfo);
-                }
+                startAlarmActivity(-1);
+                //long id = getIntent().getExtras().getLong("ID");
+                helper.createAlarm(alarmInfo);
 
                 AlarmClockManagerHelper.setAlarms(this);
-                setResult(RESULT_OK);
+
                 //assume time in format HH:MM
                // int hh = Integer.parseInt(time.split(":")[0]);
                // int mm = Integer.parseInt(time.split(":")[1]);
@@ -129,7 +126,7 @@ public class SetAlarmActivity extends MainActivity implements View.OnClickListen
                 thursday.setBackgroundColor(Color.GRAY);
                 friday.setBackgroundColor(Color.GRAY);
                 saturday.setBackgroundColor(Color.GRAY);
-                days.removeAll(days);
+                //days.removeAll(days);
                 finish();
                 break;
             case R.id.sun_button:
@@ -231,4 +228,11 @@ public class SetAlarmActivity extends MainActivity implements View.OnClickListen
            alarmInfo.setRepeatingDay(AlarmModel.SUNDAY, true);
        }
    }
+    public void startAlarmActivity(long id) {
+        Log.d("startAlarmReceiver", "In set alarm activity");
+        Intent intent = new Intent(this, SetAlarmActivity.class);
+        intent.putExtra("ID", id);
+        alarmInfo.setId(-1);
+        startActivityForResult(intent, 0);
+    }
 }

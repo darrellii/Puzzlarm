@@ -5,11 +5,15 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.project2.anything2.se329.puzzlarm.localdata.AlarmLocalDataHelper;
 
 import java.util.Calendar;
 import java.util.List;
+
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
 /**
  * Created by dj on 2/16/15.
@@ -23,12 +27,19 @@ public class AlarmClockManagerHelper extends BroadcastReceiver {
     }
 
     private static PendingIntent createPendingIntent(Context context, AlarmModel model) {
+        Log.d("InPendingIntent", "In Pending Intent");
+
         Intent intent = new Intent(context, AlarmService.class);
-        intent.putExtra("ID", model.id);
-        intent.putExtra("NAME", model.name);
-        intent.putExtra("HOUR", model.hour);
-        intent.putExtra("MIN", model.min);
-        intent.putExtra("TONE", model.tone);
+
+        intent.putExtra("ID", model.id).toString();
+
+        intent.putExtra("NAME", model.name).toString();
+
+        intent.putExtra("HOUR", model.hour).toString();
+
+        intent.putExtra("MIN", model.min).toString();
+
+        intent.putExtra("TONE", model.tone).toString();
 
         return PendingIntent.getService(context, (int) model.id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
@@ -52,13 +63,17 @@ public class AlarmClockManagerHelper extends BroadcastReceiver {
 
     public static void setAlarms(Context context) {
         AlarmLocalDataHelper helper = new AlarmLocalDataHelper(context);
-
+        Log.d("InSetAlarms", "In SetAlarms");
         List<AlarmModel> alarms =  helper.getAlarms();
 
         if (alarms != null) {
+            Log.d("InSetAlarms", "Alarms not null!");
             for (AlarmModel alarm : alarms) {
-                if (alarm.isEnabled) {
+                Log.d("InSetAlarms", "in for loop");
+
+                    Log.d("InSetAlarms", "alarm enabled");
                     PendingIntent pIntent = createPendingIntent(context, alarm);
+                    Log.d("InSetAlarms", "PendingIntent Created!");
                     Calendar calendar = Calendar.getInstance();
                     calendar.set(Calendar.HOUR_OF_DAY, alarm.hour);
                     calendar.set(Calendar.MINUTE, alarm.min);
@@ -95,7 +110,7 @@ public class AlarmClockManagerHelper extends BroadcastReceiver {
                             }
                         }
                     }
-                }
+
             }
         }
     }

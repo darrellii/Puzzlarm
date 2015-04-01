@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.provider.AlarmClock;
+import android.util.Log;
 
 import com.project2.anything2.se329.puzzlarm.AlarmReceiverActivity;
 import com.project2.anything2.se329.puzzlarm.localdata.AlarmLocalDataHelper;
@@ -28,6 +29,7 @@ public class AlarmService extends Service {
         alarmIntent.putExtras(intent);
         getApplication().startActivity(alarmIntent);
         AlarmClockManagerHelper.setAlarms(this);
+        Log.d("AlarmService", "Made it");
         return super.onStartCommand(intent, flags, startId);
     }
 }

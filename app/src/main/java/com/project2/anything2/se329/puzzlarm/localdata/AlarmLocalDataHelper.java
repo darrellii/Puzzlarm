@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
+import android.util.Log;
 
 import com.project2.anything2.se329.puzzlarm.alarmmanagement.AlarmModel;
 
@@ -50,20 +51,22 @@ public class AlarmLocalDataHelper extends SQLiteOpenHelper {
     }
 
     private AlarmModel populateModel(Cursor c){
+        Log.d("InPopulateModel","In Populate Model");
         AlarmModel model = new AlarmModel();
         model.id = c.getLong(c.getColumnIndex(AlarmLocalData.Alarm._ID));
         model.name = c.getString(c.getColumnIndex(AlarmLocalData.Alarm.COLUMN_NAME_ALARM_NAME));
         model.hour = c.getInt(c.getColumnIndex(AlarmLocalData.Alarm.COLUMN_NAME_ALARM_TIME_HOUR));
         model.min = c.getInt(c.getColumnIndex(AlarmLocalData.Alarm.COLUMN_NAME_ALARM_TIME_MINUTE));
-        model.isRepeatedWeekly = c.getInt(c.getColumnIndex(AlarmLocalData.Alarm.COLUMN_NAME_ALARM_REPEAT_WEEKLY)) == 0 ? false : true;
+        model.isRepeatedWeekly = false;
         model.tone = Uri.parse(c.getString(c.getColumnIndex(AlarmLocalData.Alarm.COLUMN_NAME_ALARM_TONE)));
-        model.isEnabled = c.getInt(c.getColumnIndex(AlarmLocalData.Alarm.COLUMN_NAME_ALARM_ENABLED)) == 0 ? false : true;
+        model.isEnabled = true;
 
         String[] repeatingDays = c.getString(c.getColumnIndex(AlarmLocalData.Alarm.COLUMN_NAME_ALARM_REPEAT_DAYS)).split(",");
         for (int i = 0; i < repeatingDays.length; ++i) {
             model.setRepeatingDay(i, repeatingDays[i].equals("false") ? false : true);
         }
-
+        Log.d("InPopulateModel", "model information set");
+        Log.d("InPopulateModel", "tone = " + model.tone.toString());
         return model;
     }
     private ContentValues populateContent(AlarmModel model) {
@@ -84,7 +87,9 @@ public class AlarmLocalDataHelper extends SQLiteOpenHelper {
     }
 
     public long createAlarm(AlarmModel model) {
+        Log.d("CreateAlarm", "In CreateAlarm");
         ContentValues values = populateContent(model);
+
         return getWritableDatabase().insert(AlarmLocalData.Alarm.TABLE_NAME, null, values);
     }
 
@@ -121,13 +126,15 @@ public class AlarmLocalDataHelper extends SQLiteOpenHelper {
         List<AlarmModel> alarmList = new ArrayList<AlarmModel>();
 
         while (c.moveToNext()) {
+            Log.d("InGetAlarms", "populateModel called");
             alarmList.add(populateModel(c));
         }
 
         if (!alarmList.isEmpty()) {
+            Log.d("InGetAlarms", " not null");
             return alarmList;
         }
-
+        Log.d("InGetAlarms", "null");
         return null;
     }
 }
